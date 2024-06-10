@@ -5,7 +5,6 @@ import CustomNavbar from '@/pages/index/components/CustomNavbar.vue'
 
 <template>
   <CustomNavbar />
-
 </template>
 
 <style lang="scss">
