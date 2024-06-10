@@ -55,3 +55,32 @@ uni.addInterceptor('uploadFile', httpInterceptor)
  *    3.2 其他错误 -> 根据后端错误信息轻提示
  *    3.3 网络错误 -> 提示用户换网络
  */
+
+type Data<T> = {
+  code: string
+  msg: string
+  result: T
+}
+export const http = <T>(options: UniApp.RequestOptions) => {
+  return new Promise<Data<T>>((resolve, reject) => {
+    uni.request({
+      ...options,
+      success: (res) => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          resolve(res.data as Data<T>)
+        } else if (res.statusCode === 401) {
+          const memberStore = useMemberStore()
+          uni.navigateTo({ url: '/pages/login/login' })
+          reject(res)
+        }
+      },
+      fail: (err) => {
+        uni.showToast({
+          title: '网络错误',
+          icon: 'none',
+        })
+        reject(err)
+      },
+    })
+  })
+}
